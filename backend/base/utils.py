@@ -8,13 +8,16 @@ from base.models import LevelPrize, PlayerLevel
 def loading_to_csv(request):
     """Функция выгрузки данных в csv-файл."""
 
-    players_level = PlayerLevel.objects.all()
+    fieldnames = ['Player_id', 'Level_title', 'Is_completed', 'Prize']
     csv_buffer = StringIO()
-    writer = csv.writer(csv_buffer, dialect='excel')
+    writer = csv.DictWriter(
+        csv_buffer, fieldnames=fieldnames, dialect='excel', delimiter=','
+    )
+    writer.writeheader()
     # Либо, непосредственная запиь в файл на сервере
     # with open('player_levels_data.csv', 'w') as file:
     # writer = csv.writer(file)
-    writer.writerow(['Player_id', 'Level_title', 'Is_completed', 'Prize'])
+    players_level = PlayerLevel.objects.all()
     for player_level in players_level:
         player_id = player_level.player.player_id
         level_title = player_level.level.title
@@ -24,7 +27,10 @@ def loading_to_csv(request):
             ).first().prize.title if LevelPrize.objects.filter(
                 level=player_level.level
                 ).exists() else None
-        writer.writerow([player_id, level_title, is_completed, prize])
+        writer.writerow({'Player_id': player_id,
+                         'Level_title': level_title,
+                         'Is_completed': is_completed,
+                         'Prize': prize})
 
     response = HttpResponse(csv_buffer.getvalue(), content_type='text/csv')
     response['charset'] = 'utf-8'
