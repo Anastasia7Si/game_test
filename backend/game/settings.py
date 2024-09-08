@@ -1,8 +1,13 @@
 from pathlib import Path
+import os
+
+from dotenv import find_dotenv, load_dotenv
+
+load_dotenv(find_dotenv())
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'django-insecure-_vc3==t(jz+b^-mt=&4p^lq*xi3^8l)&jv-lu-8c7zfc4wt$gf'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', default='12345')
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -50,8 +55,12 @@ WSGI_APPLICATION = 'game.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.getenv('DB_ENGINE', ''),
+        'NAME': os.getenv('POSTGRES_DB', ''),
+        'USER': os.getenv('POSTGRES_USER', ''),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('POSTGRES_SERVER', ''),
+        'PORT': os.getenv('POSTGRES_PORT', 5432)
     }
 }
 
@@ -78,6 +87,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

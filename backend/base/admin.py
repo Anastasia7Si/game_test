@@ -1,6 +1,12 @@
 from django.contrib import admin
 
-from base.models import Boost, Player, PlayerLevel, Level, LevelPrize, Prize
+from base.models import (Boost, Player, PlayerLevel, PlayerBoost,
+                         Level, LevelPrize, Prize)
+
+
+class BoostInline(admin.TabularInline):
+    model = PlayerBoost
+    min_num = 0
 
 
 @admin.register(Boost)
@@ -12,8 +18,9 @@ class BoostAdmin(admin.ModelAdmin):
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
-    list_display = ('player_id', 'launch_time', 'points', 'boost')
-    fields = ('player_id', 'points', 'boost')
+    inlines = (BoostInline,)
+    list_display = ('player_id', 'launch_time', 'points', 'prize')
+    fields = ('player_id', 'points', 'prize')
     list_filter = ('player_id',)
 
 
