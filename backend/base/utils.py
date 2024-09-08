@@ -10,7 +10,7 @@ def loading_to_csv(request):
 
     players_level = PlayerLevel.objects.all()
     csv_buffer = StringIO()
-    writer = csv.writer(csv_buffer)
+    writer = csv.writer(csv_buffer, dialect='excel')
     # Либо, непосредственная запиь в файл на сервере
     # with open('player_levels_data.csv', 'w') as file:
     # writer = csv.writer(file)

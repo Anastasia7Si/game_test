@@ -59,4 +59,4 @@ class LoaderPrizeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PlayerLevel
-        fields = ('player', 'level', 'is_completed', 'prize')
+        fields = ('player', 'level', 'is_completed')
